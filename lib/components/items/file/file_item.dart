@@ -6,4 +6,9 @@ class FileItem extends InteractiveItem {
     required this.file,
   });
   final PlatformFile file;
+
+  @override
+  String toString() {
+    return "FileItem: ${file.name.toString()}";
+  }
 }

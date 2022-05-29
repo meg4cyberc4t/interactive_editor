@@ -12,9 +12,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
       home: const TestPage(),
     );
   }
@@ -28,14 +27,40 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
+  late final InteractiveController controller = InteractiveController.empty();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('native_html_editor test'),
+        title: const Text('native_html_editor Test!'),
       ),
-      body: const SingleChildScrollView(
-        child: InteractiveEditorWidget(),
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text('debugPrint'),
+        onPressed: () {
+          for (var item in controller.items) {
+            debugPrint(item.toString());
+          }
+        },
+      ),
+      body: SingleChildScrollView(
+        child: InteractiveEditorWidget(
+          controller: controller,
+          textItemDecoration: const TextItemDecoration(
+            hintText: "Ваш ответ",
+          ),
+          deleteDialogDecoration: const DeleteDialogDecoration(
+            title: "Точно удалить?",
+            agreeLabel: "Да",
+            disagreeLabel: "Нет",
+          ),
+        ),
       ),
     );
   }

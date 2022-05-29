@@ -5,4 +5,9 @@ class ImageItem extends InteractiveItem {
   const ImageItem({required this.image});
 
   final PlatformFile image;
+
+  @override
+  String toString() {
+    return "ImageItem: ${image.name.toString()}";
+  }
 }

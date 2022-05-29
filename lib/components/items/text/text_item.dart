@@ -21,6 +21,11 @@ class TextItem extends InteractiveItem {
   FocusNode focusNode;
 
   @override
+  String toString() {
+    return "TextItem: ${controller.text.toString()}";
+  }
+
+  @override
   dispose() {
     controller.dispose();
     focusNode.dispose();

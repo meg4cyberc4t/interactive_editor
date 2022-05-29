@@ -3,17 +3,24 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:interactive_editor/components/add_item_button.dart';
-import 'package:interactive_editor/components/dialogs/delete_dialog.dart';
-import 'package:interactive_editor/components/items/image_item.dart';
+import 'package:interactive_editor/components/dialogs/delete_dialog/delete_dialog.dart';
 import 'package:interactive_editor/interactive_editor.dart';
 
 class InteractiveEditorWidget extends StatefulWidget {
   const InteractiveEditorWidget({
     this.controller,
+    this.fileItemDecoration,
+    this.imageItemDecoration,
+    this.textItemDecoration,
+    this.deleteDialogDecoration = const DeleteDialogDecoration(),
     Key? key,
   }) : super(key: key);
 
   final InteractiveController? controller;
+  final FileItemDecoration? fileItemDecoration;
+  final ImageItemDecoration? imageItemDecoration;
+  final TextItemDecoration? textItemDecoration;
+  final DeleteDialogDecoration deleteDialogDecoration;
 
   @override
   State<InteractiveEditorWidget> createState() =>
@@ -47,8 +54,9 @@ class InteractiveEditorWidgetState extends State<InteractiveEditorWidget> {
         focusNode: item.focusNode,
         minLines: 1,
         maxLines: null,
+        style: widget.textItemDecoration?.textStyle,
         decoration: InputDecoration(
-          hintText: "Ваш ответ...",
+          hintText: widget.textItemDecoration?.hintText,
           suffixIcon: InkWell(
             child: const Icon(Icons.close),
             onTap: () {
@@ -60,21 +68,28 @@ class InteractiveEditorWidgetState extends State<InteractiveEditorWidget> {
       );
     } else if (item is FileItem) {
       return ListTile(
-        leading: const Icon(Icons.file_present_rounded),
-        onLongPress: () async {
-          bool? res = await showDeleteDialog(context);
-          if (res == null || !res) return;
-          controller.removeAt(index);
-        },
+        leading: widget.fileItemDecoration?.customIcon ??
+            const Icon(Icons.file_present_rounded),
+        onLongPress: widget.fileItemDecoration?.onLongPress ??
+            () async {
+              bool? res = await showDeleteDialog(
+                  context, widget.deleteDialogDecoration);
+              if (res == null || !res) return;
+              controller.removeAt(index);
+            },
+        onTap: widget.fileItemDecoration?.onTap,
         title: Text(item.file.name),
       );
     } else if (item is ImageItem) {
       return InkWell(
-        onLongPress: () async {
-          bool? res = await showDeleteDialog(context);
-          if (res == null || !res) return;
-          controller.removeAt(index);
-        },
+        onLongPress: widget.fileItemDecoration?.onLongPress ??
+            () async {
+              bool? res = await showDeleteDialog(
+                  context, widget.deleteDialogDecoration);
+              if (res == null || !res) return;
+              controller.removeAt(index);
+            },
+        onTap: widget.fileItemDecoration?.onTap,
         child: Image.file(
           File(
             item.image.path!,
