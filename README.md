@@ -34,5 +34,5 @@ body: SingleChildScrollView(
 interactive_editor:
     git:
      url: https://github.com/meg4cyberc4t/interactive_editor
-     ref: master
+     ref: main
 ```
