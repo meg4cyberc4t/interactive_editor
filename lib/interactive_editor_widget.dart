@@ -1,0 +1,155 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:interactive_editor/components/add_item_button.dart';
+import 'package:interactive_editor/components/dialogs/delete_dialog.dart';
+import 'package:interactive_editor/components/items/image_item.dart';
+import 'package:interactive_editor/interactive_editor.dart';
+
+class InteractiveEditorWidget extends StatefulWidget {
+  const InteractiveEditorWidget({
+    this.controller,
+    Key? key,
+  }) : super(key: key);
+
+  final InteractiveController? controller;
+
+  @override
+  State<InteractiveEditorWidget> createState() =>
+      InteractiveEditorWidgetState();
+}
+
+class InteractiveEditorWidgetState extends State<InteractiveEditorWidget> {
+  late final InteractiveController controller;
+
+  @override
+  void initState() {
+    controller = widget.controller ?? InteractiveController.empty();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  int get itemCount => controller.length + 1;
+
+  Widget itemBuilder(context, index) {
+    InteractiveItem item = controller[index];
+    if (item is TextItem) {
+      return TextField(
+        key: GlobalKey(),
+        controller: item.controller,
+        autofocus: true,
+        focusNode: item.focusNode,
+        minLines: 1,
+        maxLines: null,
+        decoration: InputDecoration(
+          hintText: "Ваш ответ...",
+          suffixIcon: InkWell(
+            child: const Icon(Icons.close),
+            onTap: () {
+              controller.removeAt(index);
+              item.dispose();
+            },
+          ),
+        ),
+      );
+    } else if (item is FileItem) {
+      return ListTile(
+        leading: const Icon(Icons.file_present_rounded),
+        onLongPress: () async {
+          bool? res = await showDeleteDialog(context);
+          if (res == null || !res) return;
+          controller.removeAt(index);
+        },
+        title: Text(item.file.name),
+      );
+    } else if (item is ImageItem) {
+      return InkWell(
+        onLongPress: () async {
+          bool? res = await showDeleteDialog(context);
+          if (res == null || !res) return;
+          controller.removeAt(index);
+        },
+        child: Image.file(
+          File(
+            item.image.path!,
+          ),
+          repeat: ImageRepeat.noRepeat,
+          fit: BoxFit.contain,
+          semanticLabel: item.image.name,
+          alignment: Alignment.center,
+        ),
+      );
+    }
+    debugPrint("Not found item: $item");
+    return const SizedBox();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: AnimatedBuilder(
+        animation: controller,
+        builder: (context, _) => Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ...List.generate(
+              controller.length,
+              (index) => Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: itemBuilder(context, index),
+              ),
+            ),
+            AddItemButtons(
+              addTextItemCallback: () {
+                TextItem textItem = TextItem.empty();
+                controller.add(textItem);
+                FocusScope.of(context).requestFocus(textItem.focusNode);
+              },
+              addImageItemCallback: () async {
+                FilePickerResult? result = await FilePicker.platform.pickFiles(
+                  type: FileType.image,
+                  allowMultiple: false,
+                  dialogTitle: 'Выберите фото',
+                  withData: true,
+                );
+                if (result == null || result.count == 0) return;
+                for (PlatformFile platformFile in result.files) {
+                  controller.add(
+                    ImageItem(
+                      image: platformFile,
+                    ),
+                  );
+                }
+              },
+              addFileItemCallback: () async {
+                FilePickerResult? result = await FilePicker.platform.pickFiles(
+                  type: FileType.any,
+                  allowMultiple: false,
+                  dialogTitle: 'Выберите документы',
+                  withData: true,
+                );
+                if (result == null || result.count == 0) return;
+                for (PlatformFile platformFile in result.files) {
+                  controller.add(
+                    FileItem(
+                      file: platformFile,
+                    ),
+                  );
+                }
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -1,0 +1,22 @@
+name: example_native_html_editor
+description: A test Flutter project for testing native_html_editor.
+# publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  interactive_editor:
+    path: ../
+
+flutter:
+  uses-material-design: true
