@@ -12,6 +12,8 @@ class InteractiveEditorWidget extends StatefulWidget {
     this.fileItemDecoration,
     this.imageItemDecoration,
     this.textItemDecoration,
+    this.editorPadding,
+    this.itemPadding,
     this.deleteDialogDecoration = const DeleteDialogDecoration(),
     Key? key,
   }) : super(key: key);
@@ -21,6 +23,8 @@ class InteractiveEditorWidget extends StatefulWidget {
   final ImageItemDecoration? imageItemDecoration;
   final TextItemDecoration? textItemDecoration;
   final DeleteDialogDecoration deleteDialogDecoration;
+  final EdgeInsets? itemPadding;
+  final EdgeInsets? editorPadding;
 
   @override
   State<InteractiveEditorWidget> createState() =>
@@ -108,7 +112,7 @@ class InteractiveEditorWidgetState extends State<InteractiveEditorWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
+      padding: widget.editorPadding ?? EdgeInsets.zero,
       child: AnimatedBuilder(
         animation: controller,
         builder: (context, _) => Column(
@@ -119,7 +123,8 @@ class InteractiveEditorWidgetState extends State<InteractiveEditorWidget> {
             ...List.generate(
               controller.length,
               (index) => Padding(
-                padding: const EdgeInsets.all(4.0),
+                padding: widget.itemPadding ??
+                    const EdgeInsets.symmetric(vertical: 4),
                 child: itemBuilder(context, index),
               ),
             ),
