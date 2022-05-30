@@ -52,6 +52,15 @@ class _TestPageState extends State<TestPage> {
       body: SingleChildScrollView(
         child: InteractiveEditorWidget(
           controller: controller,
+          editorPadding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.inversePrimary,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(
+              color: Theme.of(context).primaryColor,
+              width: 1,
+            ),
+          ),
           textItemDecoration: const TextItemDecoration(
             hintText: "Ваш ответ",
           ),
