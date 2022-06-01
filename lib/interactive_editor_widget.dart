@@ -15,6 +15,7 @@ class InteractiveEditorWidget extends StatefulWidget {
     this.editorPadding,
     this.itemPadding,
     this.decoration,
+    this.hintText,
     this.insidePadding,
     this.deleteDialogDecoration = const DeleteDialogDecoration(),
     Key? key,
@@ -29,6 +30,7 @@ class InteractiveEditorWidget extends StatefulWidget {
   final EdgeInsets? editorPadding;
   final EdgeInsets? insidePadding;
   final Decoration? decoration;
+  final Widget? hintText;
 
   @override
   State<InteractiveEditorWidget> createState() =>
@@ -129,6 +131,7 @@ class InteractiveEditorWidgetState extends State<InteractiveEditorWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
+                if (controller.length == 0) widget.hintText ?? const SizedBox(),
                 ...List.generate(
                   controller.length,
                   (index) => Padding(
