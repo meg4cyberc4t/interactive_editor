@@ -54,7 +54,6 @@ class _TestPageState extends State<TestPage> {
           controller: controller,
           editorPadding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.inversePrimary,
             borderRadius: BorderRadius.circular(4),
             border: Border.all(
               color: Theme.of(context).primaryColor,

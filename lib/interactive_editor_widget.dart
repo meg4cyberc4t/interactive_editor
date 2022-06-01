@@ -15,6 +15,7 @@ class InteractiveEditorWidget extends StatefulWidget {
     this.editorPadding,
     this.itemPadding,
     this.decoration,
+    this.insidePadding,
     this.deleteDialogDecoration = const DeleteDialogDecoration(),
     Key? key,
   }) : super(key: key);
@@ -26,6 +27,7 @@ class InteractiveEditorWidget extends StatefulWidget {
   final DeleteDialogDecoration deleteDialogDecoration;
   final EdgeInsets? itemPadding;
   final EdgeInsets? editorPadding;
+  final EdgeInsets? insidePadding;
   final Decoration? decoration;
 
   @override
@@ -118,63 +120,66 @@ class InteractiveEditorWidgetState extends State<InteractiveEditorWidget> {
       child: Container(
         width: double.infinity,
         decoration: widget.decoration,
-        child: AnimatedBuilder(
-          animation: controller,
-          builder: (context, _) => Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ...List.generate(
-                controller.length,
-                (index) => Padding(
-                  padding: widget.itemPadding ??
-                      const EdgeInsets.symmetric(vertical: 4),
-                  child: itemBuilder(context, index),
+        child: Padding(
+          padding: widget.insidePadding ?? EdgeInsets.zero,
+          child: AnimatedBuilder(
+            animation: controller,
+            builder: (context, _) => Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ...List.generate(
+                  controller.length,
+                  (index) => Padding(
+                    padding: widget.itemPadding ??
+                        const EdgeInsets.symmetric(vertical: 4),
+                    child: itemBuilder(context, index),
+                  ),
                 ),
-              ),
-              AddItemButtons(
-                addTextItemCallback: () {
-                  TextItem textItem = TextItem.empty();
-                  controller.add(textItem);
-                  FocusScope.of(context).requestFocus(textItem.focusNode);
-                },
-                addImageItemCallback: () async {
-                  FilePickerResult? result =
-                      await FilePicker.platform.pickFiles(
-                    type: FileType.image,
-                    allowMultiple: false,
-                    dialogTitle: 'Выберите фото',
-                    withData: true,
-                  );
-                  if (result == null || result.count == 0) return;
-                  for (PlatformFile platformFile in result.files) {
-                    controller.add(
-                      ImageItem(
-                        image: platformFile,
-                      ),
+                AddItemButtons(
+                  addTextItemCallback: () {
+                    TextItem textItem = TextItem.empty();
+                    controller.add(textItem);
+                    FocusScope.of(context).requestFocus(textItem.focusNode);
+                  },
+                  addImageItemCallback: () async {
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles(
+                      type: FileType.image,
+                      allowMultiple: false,
+                      dialogTitle: 'Выберите фото',
+                      withData: true,
                     );
-                  }
-                },
-                addFileItemCallback: () async {
-                  FilePickerResult? result =
-                      await FilePicker.platform.pickFiles(
-                    type: FileType.any,
-                    allowMultiple: false,
-                    dialogTitle: 'Выберите документы',
-                    withData: true,
-                  );
-                  if (result == null || result.count == 0) return;
-                  for (PlatformFile platformFile in result.files) {
-                    controller.add(
-                      FileItem(
-                        file: platformFile,
-                      ),
+                    if (result == null || result.count == 0) return;
+                    for (PlatformFile platformFile in result.files) {
+                      controller.add(
+                        ImageItem(
+                          image: platformFile,
+                        ),
+                      );
+                    }
+                  },
+                  addFileItemCallback: () async {
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles(
+                      type: FileType.any,
+                      allowMultiple: false,
+                      dialogTitle: 'Выберите документы',
+                      withData: true,
                     );
-                  }
-                },
-              )
-            ],
+                    if (result == null || result.count == 0) return;
+                    for (PlatformFile platformFile in result.files) {
+                      controller.add(
+                        FileItem(
+                          file: platformFile,
+                        ),
+                      );
+                    }
+                  },
+                )
+              ],
+            ),
           ),
         ),
       ),
