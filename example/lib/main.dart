@@ -68,6 +68,10 @@ class _TestPageState extends State<TestPage> {
             agreeLabel: "Да",
             disagreeLabel: "Нет",
           ),
+          additional: OutlinedButton(
+            child: const Icon(Icons.send),
+            onPressed: () => debugPrint('Send message!'),
+          ),
         ),
       ),
     );

@@ -5,11 +5,13 @@ class AddItemButtons extends StatelessWidget {
     required this.addTextItemCallback,
     required this.addImageItemCallback,
     required this.addFileItemCallback,
+    this.additional,
     Key? key,
   }) : super(key: key);
   final VoidCallback addTextItemCallback;
   final VoidCallback addImageItemCallback;
   final VoidCallback addFileItemCallback;
+  final Widget? additional;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,7 @@ class AddItemButtons extends StatelessWidget {
             onPressed: addFileItemCallback,
             child: const Icon(Icons.file_present_rounded),
           ),
+          additional ?? const SizedBox(),
         ],
       ),
     );
