@@ -56,4 +56,22 @@ class InteractiveController extends ChangeNotifier {
     }
     super.dispose();
   }
+
+  Future<String> toCustomString({
+    required Future<String> Function(TextItem item) textItemConvert,
+    required Future<String> Function(ImageItem item) imageItemConvert,
+    required Future<String> Function(FileItem item) fileItemConvert,
+  }) async {
+    String result = "";
+    for (InteractiveItem item in items) {
+      if (item is TextItem) {
+        result += await textItemConvert(item);
+      } else if (item is ImageItem) {
+        result += await imageItemConvert(item);
+      } else if (item is FileItem) {
+        result += await fileItemConvert(item);
+      }
+    }
+    return result;
+  }
 }
