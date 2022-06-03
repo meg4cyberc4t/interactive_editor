@@ -74,4 +74,9 @@ class InteractiveController extends ChangeNotifier {
     }
     return result;
   }
+
+  void clear() {
+    _items = [];
+    notifyListeners();
+  }
 }
