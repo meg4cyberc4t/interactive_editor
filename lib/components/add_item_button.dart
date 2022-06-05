@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:interactive_editor/interactive_editor_active.dart';
 
 class AddItemButtons extends StatelessWidget {
   const AddItemButtons({
     required this.addTextItemCallback,
     required this.addImageItemCallback,
     required this.addFileItemCallback,
+    required this.active,
     this.additional,
     Key? key,
   }) : super(key: key);
@@ -12,6 +14,7 @@ class AddItemButtons extends StatelessWidget {
   final VoidCallback addImageItemCallback;
   final VoidCallback addFileItemCallback;
   final Widget? additional;
+  final InteractiveEditorActive active;
 
   @override
   Widget build(BuildContext context) {
@@ -22,18 +25,21 @@ class AddItemButtons extends StatelessWidget {
         alignment: WrapAlignment.center,
         spacing: 4,
         children: [
-          OutlinedButton(
-            onPressed: addTextItemCallback,
-            child: const Icon(Icons.text_increase_rounded),
-          ),
-          OutlinedButton(
-            onPressed: addImageItemCallback,
-            child: const Icon(Icons.photo_library_rounded),
-          ),
-          OutlinedButton(
-            onPressed: addFileItemCallback,
-            child: const Icon(Icons.file_present_rounded),
-          ),
+          if (active.text)
+            OutlinedButton(
+              onPressed: addTextItemCallback,
+              child: const Icon(Icons.text_increase_rounded),
+            ),
+          if (active.images)
+            OutlinedButton(
+              onPressed: addImageItemCallback,
+              child: const Icon(Icons.photo_library_rounded),
+            ),
+          if (active.documents)
+            OutlinedButton(
+              onPressed: addFileItemCallback,
+              child: const Icon(Icons.file_present_rounded),
+            ),
           additional ?? const SizedBox(),
         ],
       ),

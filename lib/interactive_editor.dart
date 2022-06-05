@@ -14,4 +14,5 @@ export 'components/items/image/image_item_decoration.dart';
 
 export 'components/items/interactive_item.dart';
 
+export 'components/dialogs/delete_dialog/delete_dialog.dart';
 export 'components/dialogs/delete_dialog/delete_dialog_decoration.dart';

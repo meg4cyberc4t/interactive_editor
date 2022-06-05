@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:interactive_editor/components/add_item_button.dart';
-import 'package:interactive_editor/components/dialogs/delete_dialog/delete_dialog.dart';
 import 'package:interactive_editor/interactive_editor.dart';
+import 'package:interactive_editor/interactive_editor_active.dart';
 
 class InteractiveEditorWidget extends StatefulWidget {
   const InteractiveEditorWidget({
@@ -18,6 +18,7 @@ class InteractiveEditorWidget extends StatefulWidget {
     this.hintText,
     this.insidePadding,
     this.deleteDialogDecoration = const DeleteDialogDecoration(),
+    this.editorActive = const InteractiveEditorActive(),
     this.additional,
     Key? key,
   }) : super(key: key);
@@ -33,6 +34,7 @@ class InteractiveEditorWidget extends StatefulWidget {
   final Decoration? decoration;
   final Widget? hintText;
   final Widget? additional;
+  final InteractiveEditorActive editorActive;
 
   @override
   State<InteractiveEditorWidget> createState() =>
@@ -143,6 +145,7 @@ class InteractiveEditorWidgetState extends State<InteractiveEditorWidget> {
                   ),
                 ),
                 AddItemButtons(
+                  active: widget.editorActive,
                   addTextItemCallback: () {
                     TextItem textItem = TextItem.empty();
                     controller.add(textItem);
