@@ -20,6 +20,7 @@ class InteractiveEditorWidget extends StatefulWidget {
     this.deleteDialogDecoration = const DeleteDialogDecoration(),
     this.editorActive = const InteractiveEditorActive(),
     this.additional,
+    this.hintTextPadding,
     Key? key,
   }) : super(key: key);
 
@@ -35,6 +36,7 @@ class InteractiveEditorWidget extends StatefulWidget {
   final Widget? hintText;
   final Widget? additional;
   final InteractiveEditorActive editorActive;
+  final EdgeInsets? hintTextPadding;
 
   @override
   State<InteractiveEditorWidget> createState() =>
@@ -70,6 +72,8 @@ class InteractiveEditorWidgetState extends State<InteractiveEditorWidget> {
         maxLines: null,
         style: widget.textItemDecoration?.textStyle,
         decoration: InputDecoration(
+          contentPadding: widget.hintTextPadding ??
+              const EdgeInsets.symmetric(vertical: 14.0, horizontal: 8),
           hintText: widget.textItemDecoration?.hintText,
           suffixIcon: InkWell(
             child: const Icon(Icons.close),

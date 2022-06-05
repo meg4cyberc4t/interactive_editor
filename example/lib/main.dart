@@ -53,6 +53,7 @@ class _TestPageState extends State<TestPage> {
         child: InteractiveEditorWidget(
           controller: controller,
           editorPadding: const EdgeInsets.all(4),
+          itemPadding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
             border: Border.all(
